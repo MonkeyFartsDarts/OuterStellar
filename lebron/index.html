@@ -1,4 +1,5 @@
 <html>
+ 
 <head>
         <title>Outer Stellar</title>
     </head>
@@ -6,13 +7,22 @@
 <body>
     <h1>Welcome to Outer Stellar</h1>
 </body>
-<button onclick=/workspaces/OuterStellar/lebron/Chat>Start Exploring</button>
+    <div class="black-box">
+    <h3>Your Number 1 Gateway to The Internet</h3>
+</div>
+<button onclick="window.location.href='http://localhost:3000';">Start Exploring</button>
+<button onclick="">Stealth mode</button>
 <style>
-    body {
-        background-color: #000000;
-        color: #FFFFFF;
+ body {
+        background: url('https://i.pinimg.com/originals/85/45/27/85452729e29da56b29ed73ac93dfcd79.gif') no-repeat center center fixed;
+        background-size: cover;
+        color: #ffffff;
         font-family: Arial, sans-serif;
         text-align: center;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: clip;
     }
     h1 {
         margin: 200px;
@@ -26,30 +36,58 @@
         color: white;
         padding: 15px 32px;
         text-align: center;
-        text-decoration: none;
+        text-decoration: thick; /* Other options include: overline, line-through, none, wavy, etc. */
         display: inline-block;
         font-size: 16px;
         margin: 4px 2px;
         cursor: pointer;
+        border-radius: 12px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        transition: background-color 0.3s, transform 0.3s; /* Transition effect */
     }
 
+   h3 {
+        font-size: 25px;
+        color: #ffffff;
+        margin: -1px;
+        text-align: match-parent;
+
+    }
+
+ .black-box {
+        background-color: rgba(0, 0, 0, 0.8); /* Black with slight transparency */
+        padding: 15px;
+        text-align: center;
+        border-radius: 10px; /* Rounded corners */
+        display: inline-block; /* Shrink-wrap the content */
+        margin: 300 300; /* Center the box */
+        text-align: center; /* Center the text inside */
+        box-shadow: 10 4px 8px rgba(0, 0, 0, 0.5); /* Add a shadow for depth */
+    }
 
 </style>
-</html>
+<script>
+    let timeout;
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moon Scene</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="scene">
-        <div class="stars"></div>
-        <div class="moon"></div>
-        <div class="astronaut"></div>
-    </div>
-</body>
+    // Function to reset the inactivity timer
+    function resetTimer() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            alert("You have been inactive for 60 seconds. Redirecting...");
+            window.location.href = "https://www.nasa.gov"; // Redirect to a timeout page
+        }, 600000); // 60 seconds
+    }
+
+    // Event listeners to detect user activity
+    window.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+    document.onscroll = resetTimer;
+    document.onclick = resetTimer;
+
+    // Optional: Add a warning before timeout
+    setInterval(() => {
+        console.log("User is active. Timer reset.");
+    }, 10000); // Logs activity every 10 seconds
+</script>
 </html>
