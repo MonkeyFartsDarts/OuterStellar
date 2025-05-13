@@ -1,15 +1,25 @@
 f# OutferStellar
 
-1. 
+``` bash
 cd lebron
 npm install
-
-2.
+npm install ws
 npx tsc
-
-3.
+node -v
 node dist/server.js
-
-4.
+node chat-server.js
+nvm install node
+nvm use node
+npm install -g npm
+npm update
+rm -rf node_modules
+npm install
+npm install -g typescript
+npx tsc
+npm install ws@latest
+npm install -g live-server
+node chat-server.js
 npx live-server
+```
 
+npm run start

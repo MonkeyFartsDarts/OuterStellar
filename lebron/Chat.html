@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: center;
+            margin-top: 20px; /* Add spacing from the top */
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .admin-panel, .chat-panel {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .admin-panel div, .chat-panel div {
+            margin-bottom: 10px;
+        }
+
+        .chat-panel {
+            display: none;
+        }
+
+        .chat-box {
+            height: 200px;
+            overflow-y: auto;
+            background-color: #444;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <input id="username" type="text" placeholder="Username" />
+        <input id="password" type="password" placeholder="Password" />
+        <button id="login-button">Login</button>
+    </div>
+
+    <div id="admin-panel" class="container admin-panel" style="display: none;">
+        <h3>Admin Panel</h3>
+        <div id="user-list"></div>
+        <input id="new-username" type="text" placeholder="New Username" />
+        <input id="new-password" type="password" placeholder="New Password" />
+        <button id="add-user-button">Add User</button>
+    </div>
+
+    <div id="chat-panel" class="container chat-panel">
+        <h3>Chat Room</h3>
+        <div id="chat-box" class="chat-box"></div>
+        <input id="chat-input" type="text" placeholder="Type your message..." />
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+    const users = {
+        admin: 'MeLoveCheese', // Default admin credentials
+        LeBron: 'KingJames', // Example user
+    };
+
+    const loginButton = document.getElementById('login-button');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const adminPanel = document.getElementById('admin-panel');
+    const chatPanel = document.getElementById('chat-panel');
+    const userList = document.getElementById('user-list');
+    const newUsernameInput = document.getElementById('new-username');
+    const newPasswordInput = document.getElementById('new-password');
+    const addUserButton = document.getElementById('add-user-button');
+    const chatBox = document.getElementById('chat-box');
+    const chatInput = document.getElementById('chat-input');
+    const sendButton = document.getElementById('send-button');
+
+    let socket;
+
+    // Function to update the user list in the admin panel
+    function updateUserList() {
+        userList.innerHTML = '';
+        for (const [username, password] of Object.entries(users)) {
+            const userDiv = document.createElement('div');
+            userDiv.textContent = `${username}: ${password}`;
+            userList.appendChild(userDiv);
+        }
+    }
+
+    // Login functionality
+    loginButton.addEventListener('click', () => {
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+
+        if (users[username] && users[username] === password) {
+            alert('Login successful!');
+            if (username === 'admin') {
+                adminPanel.style.display = 'block';
+                updateUserList();
+            } else {
+                chatPanel.style.display = 'block';
+                connectToChat(username); // Connect to WebSocket server
+            }
+        } else {
+            alert('Invalid username or password.');
+        }
+    });
+
+    // Add new user functionality
+    addUserButton.addEventListener('click', () => {
+        const newUsername = newUsernameInput.value;
+        const newPassword = newPasswordInput.value;
+
+        if (newUsername && newPassword) {
+            users[newUsername] = newPassword;
+            alert(`User "${newUsername}" added successfully!`);
+            updateUserList();
+            newUsernameInput.value = '';
+            newPasswordInput.value = '';
+        } else {
+            alert('Please enter both username and password.');
+        }
+    });
+
+    // Connect to WebSocket server
+    function connectToChat(username) {
+        socket = new WebSocket('ws://localhost:3001'); // Connect to the WebSocket server
+
+        // Display incoming messages
+        socket.onmessage = (event) => {
+            const message = document.createElement('div');
+            message.textContent = event.data;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        };
+
+        // Send a message when the "Send" button is clicked
+        sendButton.addEventListener('click', () => {
+            if (chatInput.value.trim() !== '') {
+                const message = `${username}: ${chatInput.value}`;
+                socket.send(message);
+                chatInput.value = ''; // Clear the input field
+            }
+        });
+
+        // Send a message when the "Enter" key is pressed
+        chatInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter' && chatInput.value.trim() !== '') {
+                const message = `${username}: ${chatInput.value}`;
+                socket.send(message);
+                chatInput.value = ''; // Clear the input field
+            }
+        });
+    }
+</script>
+</body>
+</html>

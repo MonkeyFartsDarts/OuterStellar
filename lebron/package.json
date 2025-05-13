@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "ws": "^8.18.2"
+  },
+  "scripts": {
+    "start": "cd lebron && npm install && npx tsc && node dist/server.js & node chat-server.js & npx live-server"
+  }
+}
